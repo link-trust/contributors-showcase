@@ -22,6 +22,14 @@ npm run build
 npm run preview
 ```
 
+## GitHub Pages 部署
+
+- 已内置工作流：`.github/workflows/deploy.yml`
+- 推送到 `main` 后会自动构建并发布到 GitHub Pages
+- 当前仓库地址对应页面：`https://link-trust.github.io/contributors-showcase/`
+
+首次启用请在仓库 Settings -> Pages 中确认 Build and deployment 的 Source 为 `GitHub Actions`。
+
 ## 贡献者内容管理
 
 在 `src/content/contributors/` 下新增一个 `.md` 文件即可创建新的贡献者页面。

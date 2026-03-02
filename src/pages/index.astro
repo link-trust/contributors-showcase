@@ -21,6 +21,7 @@ const cityCount = new Set(
     .filter((location): location is string => Boolean(location))
 ).size;
 const tagCount = new Set(contributors.flatMap((entry) => entry.data.tags)).size;
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
@@ -105,7 +106,7 @@ const tagCount = new Set(contributors.flatMap((entry) => entry.data.tags)).size;
         <code>npm run build</code>，即可生成新的静态页面。
       </p>
       <div class="mt-5 flex flex-wrap gap-3">
-        {sampleSlug && <a class="chip chip-primary" href={`/contributors/${sampleSlug}/`}>查看示例页面</a>}
+        {sampleSlug && <a class="chip chip-primary" href={`${baseUrl}contributors/${sampleSlug}/`}>查看示例页面</a>}
         <span class="meta-chip">路径: src/content/contributors/</span>
         <span class="meta-chip">校验: npm run check</span>
       </div>

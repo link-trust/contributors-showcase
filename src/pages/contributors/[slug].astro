@@ -18,6 +18,7 @@ interface Props {
 
 const { entry } = Astro.props as Props;
 const { Content } = await entry.render();
+const baseUrl = import.meta.env.BASE_URL;
 
 const formatDate = (value: Date) =>
   new Intl.DateTimeFormat("zh-CN", {
@@ -27,7 +28,7 @@ const formatDate = (value: Date) =>
 
 <BaseLayout title={`${entry.data.name} | 贡献者详情`} description={entry.data.summary}>
   <main class="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 pb-16 pt-10 md:px-10">
-    <a class="chip chip-primary w-fit reveal" href="/" style="--delay:30ms">返回首页</a>
+    <a class="chip chip-primary w-fit reveal" href={baseUrl} style="--delay:30ms">返回首页</a>
 
     <article class="card-shell detail-shell reveal space-y-7" style="--delay:100ms">
       <header class="space-y-4 border-b border-[var(--line)] pb-5">
