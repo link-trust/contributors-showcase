@@ -1,0 +1,88 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const contributors = await getCollection("contributors");
+
+  return contributors.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry }
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"contributors">;
+}
+
+const { entry } = Astro.props as Props;
+const { Content } = await entry.render();
+
+const formatDate = (value: Date) =>
+  new Intl.DateTimeFormat("zh-CN", {
+    dateStyle: "long"
+  }).format(value);
+---
+
+<BaseLayout title={`${entry.data.name} | 贡献者详情`} description={entry.data.summary}>
+  <main class="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 pb-16 pt-10 md:px-10">
+    <a class="chip chip-primary w-fit reveal" href="/" style="--delay:30ms">返回首页</a>
+
+    <article class="card-shell detail-shell reveal space-y-7" style="--delay:100ms">
+      <header class="space-y-4 border-b border-[var(--line)] pb-5">
+        <div class="flex flex-wrap items-center gap-4">
+          {entry.data.avatar && (
+            <span class="avatar-frame">
+              <img
+                src={entry.data.avatar}
+                alt={`${entry.data.name} 头像`}
+                class="h-16 w-16 object-cover ring-1 ring-black/5"
+              />
+            </span>
+          )}
+
+          <div>
+            <p class="eyebrow">Contributor Detail</p>
+            <h1 class="display mt-2 text-4xl md:text-6xl">{entry.data.name}</h1>
+            <p class="mt-1 text-base font-semibold text-[var(--primary)]">{entry.data.role}</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <span class="meta-chip">加入时间：{formatDate(entry.data.joinedAt)}</span>
+          {entry.data.location && <span class="meta-chip">城市：{entry.data.location}</span>}
+          <span class="meta-chip">标签：{entry.data.tags.length}</span>
+        </div>
+
+        {entry.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {entry.data.tags.map((tag) => (
+              <span class="tag-pill">{tag}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <p class="max-w-3xl text-base leading-8 text-[var(--muted)]">{entry.data.summary}</p>
+
+      <div class="markdown-content rounded-2xl border border-[var(--line)] bg-white/55 p-5 md:p-6">
+        <Content />
+      </div>
+
+      <footer class="flex flex-wrap gap-3 pt-4">
+        {entry.data.github && (
+          <a class="chip chip-primary" href={entry.data.github} target="_blank" rel="noopener noreferrer">
+            访问 GitHub
+          </a>
+        )}
+
+        {entry.data.website && (
+          <a class="chip" href={entry.data.website} target="_blank" rel="noopener noreferrer">
+            访问个人主页
+          </a>
+        )}
+      </footer>
+    </article>
+  </main>
+</BaseLayout>

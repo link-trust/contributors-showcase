@@ -1,0 +1,114 @@
+---
+import { getCollection } from "astro:content";
+import ContributorCard from "../components/ContributorCard.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const contributors = (await getCollection("contributors")).sort((a, b) => {
+  if (a.data.order !== b.data.order) {
+    return a.data.order - b.data.order;
+  }
+
+  return b.data.joinedAt.getTime() - a.data.joinedAt.getTime();
+});
+
+const featuredContributors = contributors.filter((entry) => entry.data.featured);
+const regularContributors = contributors.filter((entry) => !entry.data.featured);
+const listContributors = regularContributors.length > 0 ? regularContributors : contributors;
+const sampleSlug = contributors[0]?.slug;
+const cityCount = new Set(
+  contributors
+    .map((entry) => entry.data.location)
+    .filter((location): location is string => Boolean(location))
+).size;
+const tagCount = new Set(contributors.flatMap((entry) => entry.data.tags)).size;
+---
+
+<BaseLayout
+  title="贡献者展示站"
+  description="使用 Astro + Tailwind CSS v4 与 Markdown 管理贡献者内容。"
+>
+  <main class="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 pb-16 pt-12 md:px-10">
+    <section class="hero-shell reveal p-8 md:p-12">
+      <p class="eyebrow">Contributors Directory</p>
+      <h1 class="display mt-4 max-w-4xl text-5xl md:text-7xl">让每一位贡献者都被看见</h1>
+      <p class="mt-5 max-w-3xl text-base leading-7 text-[var(--muted)] md:text-lg">
+        这是一个基于 Astro 的静态站点，样式采用 Tailwind CSS v4，贡献者信息通过 Markdown
+        文件管理。新增成员只需添加一个 Markdown 文件并重新构建即可发布。
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <span class="chip">Astro 静态生成</span>
+        <span class="chip">Tailwind CSS v4</span>
+        <span class="chip">Markdown 内容管理</span>
+      </div>
+
+      <div class="hero-stats mt-8">
+        <div class="hero-stat">
+          <span class="hero-stat-value">{contributors.length}</span>
+          <span class="hero-stat-label">贡献者总数</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">{featuredContributors.length}</span>
+          <span class="hero-stat-label">核心维护者</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">{cityCount}</span>
+          <span class="hero-stat-label">覆盖城市</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">{tagCount}</span>
+          <span class="hero-stat-label">主题标签</span>
+        </div>
+      </div>
+    </section>
+
+    {featuredContributors.length > 0 && (
+      <section class="section-frame space-y-5">
+        <div class="flex items-end justify-between gap-4">
+          <div>
+            <p class="eyebrow">Featured Contributors</p>
+            <h2 class="display section-title mt-2 text-3xl md:text-4xl">核心维护者</h2>
+            <p class="section-sub">持续推动站点内容质量、组件稳定性与工程协作效率的核心角色。</p>
+          </div>
+          <p class="text-sm text-[var(--muted)]">共 {featuredContributors.length} 位</p>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2">
+          {featuredContributors.map((entry, index) => (
+            <ContributorCard entry={entry} featured={true} delay={120 + index * 90} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="section-frame space-y-5">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <p class="eyebrow">All Contributors</p>
+          <h2 class="display section-title mt-2 text-3xl md:text-4xl">更多贡献者</h2>
+          <p class="section-sub">通过统一 frontmatter 与 Markdown 模板，成员信息可以快速扩展并稳定发布。</p>
+        </div>
+        <p class="text-sm text-[var(--muted)]">共 {contributors.length} 位</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {listContributors.map((entry, index) => (
+          <ContributorCard entry={entry} delay={120 + index * 80} />
+        ))}
+      </div>
+    </section>
+
+    <section class="stat-callout reveal" style="--delay:360ms">
+      <p class="eyebrow">Join the Showcase</p>
+      <h3 class="display mt-4 text-3xl md:text-4xl">下一位贡献者，也可以是你</h3>
+      <p class="mt-4 max-w-3xl text-sm leading-7 text-[var(--muted)] md:text-base">
+        在 <code>src/content/contributors/</code> 新增一个 Markdown 文件，补齐 frontmatter 字段后运行
+        <code>npm run build</code>，即可生成新的静态页面。
+      </p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        {sampleSlug && <a class="chip chip-primary" href={`/contributors/${sampleSlug}/`}>查看示例页面</a>}
+        <span class="meta-chip">路径: src/content/contributors/</span>
+        <span class="meta-chip">校验: npm run check</span>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

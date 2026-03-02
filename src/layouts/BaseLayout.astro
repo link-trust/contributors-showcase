@@ -1,0 +1,32 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Contributors Showcase",
+  description = "Astro static contributors site with Markdown content management."
+} = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-[var(--canvas)] text-[var(--ink)] antialiased">
+    <div class="ambient-layer" aria-hidden="true">
+      <div class="ambient-glow ambient-glow-left"></div>
+      <div class="ambient-glow ambient-glow-right"></div>
+      <div class="ambient-grid"></div>
+    </div>
+    <div class="ambient-noise" aria-hidden="true"></div>
+    <slot />
+  </body>
+</html>
