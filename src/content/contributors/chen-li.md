@@ -1,5 +1,5 @@
 ---
-name: "陈礼"
+name: "张三"
 role: "前端工程师"
 summary: "负责 Astro 架构和组件体系建设，让内容站点更稳定可扩展。"
 location: "上海"
