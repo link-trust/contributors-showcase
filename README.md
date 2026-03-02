@@ -22,13 +22,23 @@ npm run build
 npm run preview
 ```
 
-## GitHub Pages 部署
+## GitHub Pages 一键初始化
 
-- 已内置工作流：`.github/workflows/deploy.yml`
-- 推送到 `main` 后会自动构建并发布到 GitHub Pages
-- 当前仓库地址对应页面：`https://link-trust.github.io/contributors-showcase/`
+给其他人使用时，可以让对方先点这个链接直接创建自己的仓库：
+
+[![Use this template](https://img.shields.io/badge/GitHub-Use%20this%20template-black?logo=github)](https://github.com/link-trust/contributors-showcase/generate)
+
+> 仓库所有者请先在 Settings -> General 中开启 `Template repository`，上面的链接才可用。
+
+创建完成后本仓库已内置好 GitHub Pages 所需配置：
+
+- 工作流：`.github/workflows/deploy.yml`
+- 推送到 `main` 会自动构建并发布到 GitHub Pages
+- `astro.config.mjs` 会在 GitHub Actions 中自动根据仓库名推断 `base` 路径（例如 `/my-showcase`）
 
 首次启用请在仓库 Settings -> Pages 中确认 Build and deployment 的 Source 为 `GitHub Actions`。
+
+当前仓库地址对应页面：`https://link-trust.github.io/contributors-showcase/`
 
 ## 贡献者内容管理
 
